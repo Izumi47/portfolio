@@ -1,0 +1,9 @@
+# Ignore Markdown files
+*.md
+!README.md
+
+# Ignore PDF files
+*.pdf
+
+# Ignore `app copy.py` file
+app copy.py
