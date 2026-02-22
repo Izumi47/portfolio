@@ -17,12 +17,27 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="bg-art art-1" aria-hidden="true">
+      <svg viewBox="0 0 220 220" role="presentation">
+        <path d="M32 104C32 63 64 31 104 31C142 31 175 62 175 104C175 142 142 176 104 176C64 176 32 144 32 104Z" fill="currentColor" opacity="0.18"></path>
+        <circle cx="110" cy="110" r="78" fill="none" stroke="currentColor" stroke-width="4" opacity="0.45"></circle>
+        <path d="M58 154L154 58" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
+      </svg>
+    </div>
+    <div class="bg-art art-2" aria-hidden="true">
+      <svg viewBox="0 0 260 200" role="presentation">
+        <rect x="34" y="30" width="140" height="140" rx="22" fill="currentColor" opacity="0.14"></rect>
+        <path d="M78 52L196 130" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.42"></path>
+        <path d="M62 150C80 132 102 126 126 126C150 126 176 134 204 154" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.55"></path>
+      </svg>
+    </div>
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
     <header class="site-header">
       <div class="container nav-wrap">
         <a href="#home" class="brand">Ahmad Arief</a>
+        <button class="theme-toggle" aria-label="Toggle dark mode" id="themeToggle" title="Toggle dark mode">🌙</button>
         <button class="menu-toggle" aria-label="Open menu" id="menuToggle">☰</button>
         <nav class="nav" id="navMenu">
           <a href="#about">About</a>
@@ -40,13 +55,26 @@
       <section class="hero section container">
         <div class="hero-layout">
           <div class="hero-content">
+            <!-- <div class="hero-mark" aria-hidden="true">
+              <svg viewBox="0 0 160 56" role="presentation">
+                <rect x="2" y="2" width="156" height="52" rx="12" fill="none" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M24 40L40 16L56 40M32 30H48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M74 16V40M74 16H92C100 16 106 22 106 30C106 38 100 40 92 40H74" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M118 16V40M118 16H140" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div> -->
             <p class="eyebrow">Computer Science Graduate · Automation · AI/ML</p>
-            <h1>Designing practical systems that turn manual effort into smart digital workflows.</h1>
+            <h1>Engineering Better Work Systems</h1>
             <p class="lead">
               I’m <strong>Ahmad Arief bin Omar</strong> — a software engineer focused on automation, analytics, and scalable
               application delivery. I combine full-stack engineering with business process understanding to build solutions
               that are fast, reliable, and easy to maintain.
             </p>
+            <div class="hero-tags" aria-label="Core focus areas">
+              <span>Automation Engineering</span>
+              <span>Full-Stack Development</span>
+              <span>AI-Driven Solutions</span>
+            </div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#projects">Explore Projects</a>
               <a class="btn btn-secondary" href="mailto:ahmadarief4701@gmail.com">Let’s Collaborate</a>
