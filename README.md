@@ -1,5 +1,25 @@
-# Ahmad Arief Portfolio Website
+# Ahmadrief.dev
 
-This website is a personal portfolio built to present Ahmad Arief bin Omar’s professional profile in a clear and engaging format. It highlights work experience, technical skills, project achievements, education, and contact information.
+My personal portfolio showcasing my work as a Software & Automation Engineer.
 
-The design focuses on a modern pastel visual style with responsive layout and polished interactions, making it easy for recruiters, collaborators, and hiring teams to quickly understand his strengths in software engineering, automation, AI/ML, and full-stack development.
+## About
+
+I build automation systems that turn hours of manual work into seconds — helping teams focus on what actually moves the needle.
+
+## What I Do
+
+- Automation Scripts
+- BI Dashboards
+- Data Reconciliation
+- Process Documentation
+- AI-Enabled Workflows
+
+## Tech Stack
+
+Python, Java, Go, JavaScript, React, Power BI, Power Automate, PowerApps, SQL, Docker
+
+## Connect
+
+- [LinkedIn](https://linkedin.com/in/ahmad-arief)
+- [GitHub](https://github.com/Izumi47)
+- [Email](mailto:ahmadarief4701@gmail.com)
