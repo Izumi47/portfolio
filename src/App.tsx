@@ -502,7 +502,7 @@ function App() {
           </div>
         </div>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-1">
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
                 <Badge key={skill} variant="secondary" className="rounded-full px-4 py-1.5 text-sm font-medium">
