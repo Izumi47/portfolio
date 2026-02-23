@@ -289,6 +289,27 @@
   }
 }
 
+@keyframes timeline-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 28%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--color-primary) 0%, transparent);
+  }
+}
+
+@keyframes icon-stroke-draw {
+  0% {
+    stroke-dasharray: 0 120;
+    opacity: 0.72;
+  }
+  100% {
+    stroke-dasharray: 120 0;
+    opacity: 1;
+  }
+}
+
 @layer utilities {
   .texture-grid {
     background-image:
@@ -298,7 +319,7 @@
   }
 
   .marquee-track {
-    animation: marquee 10s linear infinite;
+    animation: marquee 16s linear infinite;
     will-change: transform;
   }
 
@@ -317,6 +338,176 @@
   .animate-pulse-subtle {
     animation: pulse-subtle 2.2s ease-in-out infinite;
   }
+
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    transition:
+      opacity 580ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.25rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link-active::after {
+    transform: scaleX(1);
+  }
+
+  .nav-link-active {
+    color: var(--color-primary);
+  }
+
+  .theme-icon {
+    transition:
+      transform 360ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 280ms ease;
+  }
+
+  .theme-icon-visible {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  .theme-icon-hidden {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.25);
+  }
+
+  .project-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      130deg,
+      color-mix(in oklab, var(--color-primary) 88%, transparent),
+      color-mix(in oklab, var(--color-chart-2) 88%, transparent),
+      color-mix(in oklab, var(--color-chart-4) 85%, transparent)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 340ms ease;
+  }
+
+  .project-card:hover::before {
+    opacity: 1;
+  }
+
+  .timeline-line {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-primary) 80%, transparent),
+      color-mix(in oklab, var(--color-border) 70%, transparent)
+    );
+  }
+
+  .timeline-node {
+    animation: timeline-pulse 3s ease-in-out infinite;
+  }
+
+  .skills-group {
+    transition:
+      transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 250ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .skills-group:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
+    box-shadow: 0 12px 26px color-mix(in oklab, var(--color-primary) 11%, transparent);
+  }
+
+  .skill-chip {
+    transition:
+      transform 200ms ease,
+      background-color 220ms ease,
+      color 220ms ease;
+  }
+
+  .skill-chip:hover {
+    transform: translateY(-1px);
+    background-color: color-mix(in oklab, var(--color-primary) 22%, var(--color-secondary));
+    color: var(--color-foreground);
+  }
+
+  .magnetic {
+    will-change: transform;
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .icon-draw:hover svg {
+    animation: icon-stroke-draw 520ms ease both;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  .back-to-top {
+    transition:
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 260ms ease;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-reveal] {
+    transform: translateY(12px) scale(0.99);
+    transition-duration: 420ms;
+  }
+
+  .skills-group:hover,
+  .skill-chip:hover,
+  .project-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .timeline-node {
+    animation-duration: 3.6s;
+  }
+
+  .marquee-track {
+    animation-duration: 20s;
+  }
 }
 
 @keyframes marquee {
@@ -333,7 +524,23 @@
   .animate-float-slow,
   .animate-float-delayed,
   .animate-rise,
-  .animate-pulse-subtle {
+  .animate-pulse-subtle,
+  .timeline-node,
+  .icon-draw:hover svg {
     animation: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .magnetic,
+  .skills-group,
+  .skill-chip,
+  .back-to-top {
+    transition: none !important;
+    transform: none !important;
   }
 }

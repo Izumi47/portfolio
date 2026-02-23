@@ -1,4 +1,4 @@
-# Ahmadrief.dev
+# AhmadArief.dev
 
 My personal portfolio showcasing my work as a Software & Automation Engineer.
 
