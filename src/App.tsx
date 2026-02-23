@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { type CSSProperties, useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,11 +26,20 @@ import {
   Workflow,
   Zap,
 } from 'lucide-react'
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 type Metric = {
   label: string
   target: number
   kind: 'plus' | 'plain' | 'thousands-s' | 'years-plus'
+}
+
+type MotionProfile = {
+  revealStep: number
+  revealCycle: number
+  heroProfileCard: number
+  heroMetricStart: number
+  heroMetricStep: number
 }
 
 const NAV_ITEMS = [
@@ -47,6 +56,33 @@ const METRICS: Metric[] = [
   { target: 1000, label: 'hours reduced from manual work', kind: 'thousands-s' },
   { target: 2, label: 'enterprise operations impact', kind: 'years-plus' },
 ]
+
+const MOTION_PROFILES: Record<'crisp' | 'balanced' | 'dramatic', MotionProfile> = {
+  crisp: {
+    revealStep: 45,
+    revealCycle: 7,
+    heroProfileCard: 160,
+    heroMetricStart: 230,
+    heroMetricStep: 65,
+  },
+  balanced: {
+    revealStep: 60,
+    revealCycle: 6,
+    heroProfileCard: 200,
+    heroMetricStart: 280,
+    heroMetricStep: 80,
+  },
+  dramatic: {
+    revealStep: 80,
+    revealCycle: 5,
+    heroProfileCard: 260,
+    heroMetricStart: 360,
+    heroMetricStep: 105,
+  },
+}
+
+const ACTIVE_MOTION_PROFILE: keyof typeof MOTION_PROFILES = 'balanced'
+const motion = MOTION_PROFILES[ACTIVE_MOTION_PROFILE]
 
 const CASE_STUDIES = [
   {
@@ -231,6 +267,14 @@ function App() {
     if (revealTargets.length === 0) {
       return
     }
+
+    revealTargets.forEach((target, index) => {
+      if (target.style.getPropertyValue('--reveal-delay')) {
+        return
+      }
+      const stagger = (index % motion.revealCycle) * motion.revealStep
+      target.style.setProperty('--reveal-delay', `${stagger}ms`)
+    })
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -471,8 +515,9 @@ function App() {
             </div>
 
             <Card
-              className="animate-rise border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
-              style={{ animationDelay: '220ms' }}
+              className="border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
+              data-reveal
+              style={{ '--reveal-delay': `${motion.heroProfileCard}ms` } as CSSProperties}
             >
               <CardContent className="space-y-4 pt-6 text-sm">
                 <div className="flex justify-center">
@@ -513,12 +558,13 @@ function App() {
             </Card>
           </div>
 
-          <div id="hero-metrics" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-reveal>
+          <div id="hero-metrics" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {METRICS.map((metric, index) => (
               <Card
                 key={metric.label}
-                className="animate-rise border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
+                data-reveal
+                style={{ '--reveal-delay': `${motion.heroMetricStart + index * motion.heroMetricStep}ms` } as CSSProperties}
               >
                 <CardContent className="space-y-1 py-1">
                   <p className="text-2xl font-bold md:text-3xl">{formatMetricValue(metric, metricValues[index])}</p>
@@ -708,7 +754,7 @@ function App() {
         <div className="skills-cloud grid gap-4 md:grid-cols-3">
           {SKILL_GROUPS.map((group) => (
             <Card key={group.title} className="skills-group" data-reveal>
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-0">
                 <CardTitle className="text-base">{group.title}</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -862,6 +908,8 @@ function App() {
         </div>
       </footer>
 
+      <SpeedInsights />
+
       <Button
         size="icon"
         className={`back-to-top fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full ${
@@ -871,7 +919,7 @@ function App() {
         aria-label="Back to top"
       >
         <svg className="pointer-events-none absolute inset-0 -rotate-90" viewBox="0 0 40 40" aria-hidden>
-          {/* <circle
+          <circle
             cx="20"
             cy="20"
             r="16"
@@ -891,7 +939,7 @@ function App() {
             strokeDasharray={`${progressCircumference} ${progressCircumference}`}
             strokeDashoffset={progressOffset}
             strokeLinecap="round"
-          /> */}
+          />
         </svg>
         <ChevronUp className="relative z-10 h-4 w-4" />
       </Button>
