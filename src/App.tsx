@@ -68,6 +68,24 @@ const CASE_STUDIES = [
     stack: 'Power BI · Python · SAP Data Pipeline',
   },
   {
+    title: 'Local AI Lab & LLM Workflow Operations',
+    role: 'AI / Systems Builder',
+    problem: 'Running practical AI workflows locally required stable environments, tool orchestration, and reliable system administration.',
+    solution:
+      'Deployed and managed local LLM stacks with Ollama, Goose, Open WebUI, and containerized tooling while building Python utilities for automation and image-processing support.',
+    impact: 'Created a repeatable local AI workspace for experimentation, automation, and day-to-day productivity without depending on external hosted platforms.',
+    stack: 'Ollama · Goose · Open WebUI · Python · Docker · WSL',
+  },
+  {
+    title: 'n8n Automation Workflow Design',
+    role: 'Workflow Automation Builder',
+    problem: 'Disconnected tools and repetitive multi-step tasks slow teams down when handoffs rely on manual triggers and follow-up.',
+    solution:
+      'Designed n8n-based workflows to connect business tools, automate trigger-to-action pipelines, and support AI-assisted routing for repetitive operational tasks.',
+    impact: 'Reduced manual coordination work and created reusable automation patterns that are easier to monitor, extend, and hand over.',
+    stack: 'n8n · APIs · Webhooks · AI-Assisted Automation',
+  },
+  {
     title: 'Secure Vault Android App',
     role: 'Solo Developer',
     problem: 'Sensitive personal media required stronger privacy than standard storage apps provide.',
@@ -144,7 +162,7 @@ const EXPERIENCES = [
 const SKILL_GROUPS = [
   {
     title: 'Automation & Backend',
-    items: ['Python', 'Java', 'C++', 'Go/Golang', 'SQL', 'MySQL', 'Docker', 'Selenium', 'Puppeteer'],
+    items: ['Python', 'Java', 'C++', 'Go/Golang', 'SQL', 'MySQL', 'Docker', 'Selenium', 'Puppeteer', 'n8n'],
   },
   {
     title: 'Frontend & Apps',
@@ -157,6 +175,8 @@ const SKILL_GROUPS = [
       'Power Automate',
       'SAP Automation',
       'Machine Learning',
+      'Ollama',
+      'Open WebUI',
       'GitHub Actions',
     ],
   },
