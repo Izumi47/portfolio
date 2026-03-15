@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +13,6 @@ import {
   BarChart3,
   Briefcase,
   CheckCircle2,
-  ChevronUp,
   FileText,
   Github,
   GraduationCap,
@@ -34,14 +33,6 @@ type Metric = {
   kind: 'plus' | 'plain' | 'thousands-s' | 'years-plus'
 }
 
-type MotionProfile = {
-  revealStep: number
-  revealCycle: number
-  heroProfileCard: number
-  heroMetricStart: number
-  heroMetricStep: number
-}
-
 const NAV_ITEMS = [
   { label: 'Impact', href: '#impact' },
   { label: 'Experience', href: '#experience' },
@@ -51,38 +42,11 @@ const NAV_ITEMS = [
 ]
 
 const METRICS: Metric[] = [
-  { target: 200000, label: 'PO items automated', kind: 'plus' },
-  { target: 8, label: 'APAC markets supported', kind: 'plain' },
-  { target: 1000, label: 'hours reduced from manual work', kind: 'thousands-s' },
+  { target: 1000000, label: 'PO items automated', kind: 'plus' },
+  { target: 5, label: 'Regions supported', kind: 'plain' },
+  { target: 10000, label: 'hours reduced from manual work', kind: 'thousands-s' },
   { target: 2, label: 'enterprise operations impact', kind: 'years-plus' },
 ]
-
-const MOTION_PROFILES: Record<'crisp' | 'balanced' | 'dramatic', MotionProfile> = {
-  crisp: {
-    revealStep: 45,
-    revealCycle: 7,
-    heroProfileCard: 160,
-    heroMetricStart: 230,
-    heroMetricStep: 65,
-  },
-  balanced: {
-    revealStep: 60,
-    revealCycle: 6,
-    heroProfileCard: 200,
-    heroMetricStart: 280,
-    heroMetricStep: 80,
-  },
-  dramatic: {
-    revealStep: 80,
-    revealCycle: 5,
-    heroProfileCard: 260,
-    heroMetricStart: 360,
-    heroMetricStep: 105,
-  },
-}
-
-const ACTIVE_MOTION_PROFILE: keyof typeof MOTION_PROFILES = 'balanced'
-const motion = MOTION_PROFILES[ACTIVE_MOTION_PROFILE]
 
 const CASE_STUDIES = [
   {
@@ -238,62 +202,12 @@ function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches
   })
 
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [activeSection, setActiveSection] = useState(NAV_ITEMS[0].href.replace('#', ''))
-  const [metricValues, setMetricValues] = useState<number[]>(() => METRICS.map(() => 0))
-  const [hasCountedMetrics, setHasCountedMetrics] = useState(false)
-  const [showBackToTop, setShowBackToTop] = useState(false)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDark)
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
   }, [isDark])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      setScrollProgress(progress)
-      setShowBackToTop(scrollTop > 420)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    const revealTargets = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
-    if (revealTargets.length === 0) {
-      return
-    }
-
-    revealTargets.forEach((target, index) => {
-      if (target.style.getPropertyValue('--reveal-delay')) {
-        return
-      }
-      const stagger = (index % motion.revealCycle) * motion.revealStep
-      target.style.setProperty('--reveal-delay', `${stagger}ms`)
-    })
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      {
-        threshold: 0.16,
-        rootMargin: '0px 0px -8% 0px',
-      },
-    )
-
-    revealTargets.forEach((target) => observer.observe(target))
-    return () => observer.disconnect()
-  }, [])
 
   useEffect(() => {
     const sectionTargets = NAV_ITEMS.map((item) => document.querySelector(item.href)).filter(
@@ -323,52 +237,6 @@ function App() {
     sectionTargets.forEach((target) => observer.observe(target))
     return () => observer.disconnect()
   }, [])
-
-  useEffect(() => {
-    if (hasCountedMetrics) {
-      return
-    }
-
-    const metricsContainer = document.getElementById('hero-metrics')
-    if (!metricsContainer) {
-      return
-    }
-
-    let frame = 0
-    const duration = 1300
-    const start = performance.now()
-
-    const animate = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      const nextValues = METRICS.map((metric) => Math.round(metric.target * eased))
-      setMetricValues(nextValues)
-
-      if (progress < 1) {
-        frame = window.requestAnimationFrame(animate)
-      }
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setHasCountedMetrics(true)
-          frame = window.requestAnimationFrame(animate)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.35 },
-    )
-
-    observer.observe(metricsContainer)
-
-    return () => {
-      observer.disconnect()
-      if (frame) {
-        window.cancelAnimationFrame(frame)
-      }
-    }
-  }, [hasCountedMetrics])
 
   useEffect(() => {
     const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches
@@ -410,17 +278,9 @@ function App() {
     setIsDark(nextIsDark)
   }
 
-  const progressCircumference = 2 * Math.PI * 16
-  const progressOffset = progressCircumference - (scrollProgress / 100) * progressCircumference
-
   return (
     <main className="min-h-screen bg-background" id="top">
       <div className="noise-overlay" />
-
-      <div
-        className="fixed left-0 top-0 z-[100] h-1 bg-primary transition-all duration-300"
-        style={{ width: `${scrollProgress}%` }}
-      />
 
       <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -516,8 +376,6 @@ function App() {
 
             <Card
               className="border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
-              data-reveal
-              style={{ '--reveal-delay': `${motion.heroProfileCard}ms` } as CSSProperties}
             >
               <CardContent className="space-y-4 pt-6 text-sm">
                 <div className="flex justify-center">
@@ -551,30 +409,28 @@ function App() {
                   </div>
                   <div>
                     <p className="font-medium">Ready to start</p>
-                    <p className="text-xs text-muted-foreground">1 month notice</p>
+                    <p className="text-xs text-muted-foreground">3 months notice</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div id="hero-metrics" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {METRICS.map((metric, index) => (
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {METRICS.map((metric) => (
               <Card
                 key={metric.label}
                 className="border-primary/20 bg-card/80 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
-                data-reveal
-                style={{ '--reveal-delay': `${motion.heroMetricStart + index * motion.heroMetricStep}ms` } as CSSProperties}
               >
                 <CardContent className="space-y-1 py-1">
-                  <p className="text-2xl font-bold md:text-3xl">{formatMetricValue(metric, metricValues[index])}</p>
+                  <p className="text-2xl font-bold md:text-3xl">{formatMetricValue(metric, metric.target)}</p>
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">{metric.label}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-full border bg-card/70 py-3" data-reveal>
+          <div className="mt-8 overflow-hidden rounded-full border bg-card/70 py-3">
             <div className="marquee-track flex w-max text-sm">
               {[0, 1].map((groupIndex) => (
                 <div
@@ -594,7 +450,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16 pt-8" id="impact" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16 pt-8" id="impact">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <Sparkles className="h-6 w-6 text-primary" />
@@ -605,7 +461,7 @@ function App() {
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="md:col-span-2" data-reveal>
+          <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle className="text-xl">From Workflow Friction to Operational Speed</CardTitle>
               <CardDescription>
@@ -614,7 +470,7 @@ function App() {
             </CardHeader>
             <CardContent className="grid gap-3 sm:grid-cols-3">
               {PLAYBOOK.map((step, index) => (
-                <div key={step.title} className="rounded-xl border bg-background/70 p-4" data-reveal>
+                <div key={step.title} className="rounded-xl border bg-background/70 p-4">
                   <p className="text-xs font-semibold text-primary">0{index + 1}</p>
                   <p className="mt-2 font-medium">{step.title}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{step.detail}</p>
@@ -622,7 +478,7 @@ function App() {
               ))}
             </CardContent>
           </Card>
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10" data-reveal>
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
             <CardHeader>
               <CardTitle className="text-xl">What I Deliver</CardTitle>
             </CardHeader>
@@ -662,7 +518,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="experience" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="experience">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <Briefcase className="h-6 w-6 text-primary" />
@@ -676,7 +532,7 @@ function App() {
         <div className="relative pl-6 md:pl-8">
           <div className="timeline-line absolute bottom-2 left-2 top-2 w-px" />
           {EXPERIENCES.map((experience) => (
-            <div key={experience.title} className="relative pb-6 last:pb-0" data-reveal>
+            <div key={experience.title} className="relative pb-6 last:pb-0">
               <span className="timeline-node absolute left-[-0.15rem] top-8 h-4 w-4 rounded-full border-2 border-primary bg-background" />
               <Card className="ml-4">
                 <CardHeader>
@@ -694,7 +550,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="projects" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="projects">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <ArrowUpRight className="h-6 w-6 text-primary" />
@@ -709,7 +565,6 @@ function App() {
             <Card
               key={project.title}
               className="project-card h-full border-primary/15 bg-card/85 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
-              data-reveal
             >
               <CardHeader className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
@@ -741,7 +596,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="skills" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="skills">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <Sparkles className="h-6 w-6 text-primary" />
@@ -753,7 +608,7 @@ function App() {
         </div>
         <div className="skills-cloud grid gap-4 md:grid-cols-3">
           {SKILL_GROUPS.map((group) => (
-            <Card key={group.title} className="skills-group" data-reveal>
+            <Card key={group.title} className="skills-group">
               <CardHeader className="pb-0">
                 <CardTitle className="text-base">{group.title}</CardTitle>
               </CardHeader>
@@ -771,7 +626,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16" id="why-me" data-reveal>
+      <section className="mx-auto max-w-6xl px-6 pb-16" id="why-me">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <CheckCircle2 className="h-6 w-6 text-primary" />
@@ -783,7 +638,7 @@ function App() {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {DIFFERENTIATORS.map((item) => (
-            <Card key={item} data-reveal>
+            <Card key={item}>
               <CardContent className="flex flex-col items-center gap-3 py-1 text-center">
                 <CheckCircle2 className="h-8 w-8 text-primary" />
                 <p className="text-sm text-muted-foreground">{item}</p>
@@ -793,7 +648,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16" id="social-proof" data-reveal>
+      <section className="mx-auto max-w-6xl px-6 pb-16" id="social-proof">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <Sparkles className="h-6 w-6 text-primary" />
@@ -805,7 +660,7 @@ function App() {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {TESTIMONIALS.map((item) => (
-            <Card key={item.source} data-reveal>
+            <Card key={item.source}>
               <CardContent className="space-y-3 py-6">
                 <p className="text-sm text-muted-foreground">“{item.quote}”</p>
                 <p className="text-sm font-medium">{item.source}</p>
@@ -815,7 +670,7 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="education" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="education">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 icon-draw">
             <GraduationCap className="h-6 w-6 text-primary" />
@@ -825,7 +680,7 @@ function App() {
             <p className="text-sm text-muted-foreground">Academic background</p>
           </div>
         </div>
-        <Card data-reveal>
+        <Card>
           <CardHeader>
             <CardTitle>Management &amp; Science University</CardTitle>
             <CardDescription>
@@ -841,7 +696,7 @@ function App() {
         </Card>
       </section>
 
-      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="contact" data-reveal>
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-6 pb-16" id="contact">
         <div className="relative overflow-hidden rounded-3xl border-2 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-8 md:p-12">
           <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
@@ -881,7 +736,7 @@ function App() {
         </div>
       </section>
 
-      <footer className="border-t bg-muted/30" data-reveal>
+      <footer className="border-t bg-muted/30">
         <div className="mx-auto max-w-6xl px-6 py-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-sm text-muted-foreground">
@@ -910,39 +765,6 @@ function App() {
 
       <SpeedInsights />
 
-      <Button
-        size="icon"
-        className={`back-to-top fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full ${
-          showBackToTop ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-5 opacity-0'
-        }`}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        aria-label="Back to top"
-      >
-        <svg className="pointer-events-none absolute inset-0 -rotate-90" viewBox="0 0 40 40" aria-hidden>
-          <circle
-            cx="20"
-            cy="20"
-            r="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-border/80"
-          />
-          <circle
-            cx="20"
-            cy="20"
-            r="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-primary transition-all duration-200"
-            strokeDasharray={`${progressCircumference} ${progressCircumference}`}
-            strokeDashoffset={progressOffset}
-            strokeLinecap="round"
-          />
-        </svg>
-        <ChevronUp className="relative z-10 h-4 w-4" />
-      </Button>
     </main>
   )
 }
