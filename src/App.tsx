@@ -162,22 +162,104 @@ const EXPERIENCES = [
 const SKILL_GROUPS = [
   {
     title: 'Automation & Backend',
-    items: ['Python', 'Java', 'C++', 'Go/Golang', 'SQL', 'MySQL', 'Docker', 'Selenium', 'Puppeteer', 'n8n'],
+    items: [
+      'Python',
+      'Java',
+      'C++',
+      'Go/Golang',
+      'Objective-C',
+      'SQL',
+      'Node.js',
+      'MySQL',
+      'Redis',
+      'Docker',
+      'Docker Compose',
+      'Maven',
+      'CMake',
+      'n8n',
+    ],
   },
   {
-    title: 'Frontend & Apps',
-    items: ['JavaScript', 'React', 'Vite', 'Tailwind', 'PowerApps', 'Streamlit'],
+    title: 'Web & App Development',
+    items: [
+      'HTML',
+      'CSS',
+      'JavaScript',
+      'PHP',
+      'React',
+      'Vite',
+      'React Router',
+      'Tailwind',
+      'Framer Motion',
+      'PWA',
+      'Flutter',
+    ],
   },
   {
-    title: 'Data & Operations',
+    title: 'BI & Workflow Tools',
     items: [
       'Power BI',
       'Power Automate',
+      'PowerApps',
+      'Excel',
+      'Word',
+      'PowerPoint',
+      'SharePoint',
       'SAP Automation',
+    ],
+  },
+  {
+    title: 'AI & Machine Learning',
+    items: [
+      'Streamlit',
       'Machine Learning',
+      'Random Forest',
       'Ollama',
+      'Goose',
+      'OpenClaw',
       'Open WebUI',
+      'JamAI',
+      'AI Agent Workflows',
+    ],
+  },
+  {
+    title: 'Automation, QA & DevOps',
+    items: [
+      'Git',
       'GitHub Actions',
+      'ESLint',
+      'WSL',
+      'Selenium',
+      'Puppeteer',
+      'Web Scraping',
+      'Browser Automation',
+      'discord.py',
+      'Command-Line Utilities',
+    ],
+  },
+  {
+    title: 'Systems & Specialized',
+    items: [
+      'SAP Automation',
+      'phpMyAdmin',
+      'Game Server Emulation',
+      'Save File Editing',
+      'Binary Parsing',
+      'Reverse Engineering',
+      'ERP Systems',
+    ],
+  },
+  {
+    title: 'Languages & Collaboration',
+    items: [
+      'English',
+      'Malay',
+      'Analytical Thinking',
+      'Critical Thinking',
+      'Communication',
+      'Problem Solving',
+      'Attention to Detail',
+      'Team Collaboration',
     ],
   },
 ]
@@ -626,7 +708,7 @@ function App() {
             <p className="text-sm text-muted-foreground">Technologies I work with</p>
           </div>
         </div>
-        <div className="skills-cloud grid gap-4 md:grid-cols-3">
+        <div className="skills-cloud grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {SKILL_GROUPS.map((group) => (
             <Card key={group.title} className="skills-group">
               <CardHeader className="pb-0">
